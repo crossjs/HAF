@@ -1,0 +1,65 @@
+{
+  "name": "HAF",
+  "version": "0.0.0",
+  "description": ":globe_with_meridians: HTML Application Framework",
+  "main": "dist/index.js",
+  "jsnext:main": "src/index.js",
+  "scripts": {
+    "build": "node --harmony .tools/build",
+    "lint": "eslint --max-warnings 10 .",
+    "lint:fix": "npm run lint -- --fix",
+    "unit": "karma start ./test/unit/runner.js",
+    "unit:dev": "karma start ./test/unit/runner.js --watch",
+    "test": "npm run lint && npm run unit",
+    "release": "bash .tools/release.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crossjs/HAF.git"
+  },
+  "keywords": [
+    "HTML",
+    "Application",
+    "Framework"
+  ],
+  "author": "crossjs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/crossjs/HAF/issues"
+  },
+  "homepage": "https://github.com/crossjs/HAF#readme",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-plugin-__coverage__": "^11.0.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.0.0",
+    "eslint-config-plato": "^0.0.0",
+    "eslint-loader": "^1.4.0",
+    "karma": "^1.0.0",
+    "karma-coverage": "^1.0.0",
+    "karma-es6-shim": "^1.0.0",
+    "karma-mocha": "^1.0.1",
+    "karma-mocha-reporter": "^2.0.4",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.5.3",
+    "phantomjs-polyfill": "0.0.2",
+    "phantomjs-prebuilt": "^2.1.7",
+    "rollup": "^0.33.0",
+    "rollup-plugin-babel": "^2.4.0",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0",
+    "uglify-js": "^2.5.0",
+    "webpack": "^1.13.1",
+    "yargs": "^4.7.1"
+  }
+}
