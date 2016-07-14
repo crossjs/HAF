@@ -82,7 +82,9 @@ const router = {
    * @x: The name, path or handler of the route to remove.
    */
   off (x) {
-    if (typeof x === 'undefined') { return router.reset() }
+    if (typeof x === 'undefined') {
+      return this.reset()
+    }
     return !!(delete routes[names[x] || paths[x] || handlers[x] || x])
   },
 
@@ -94,12 +96,12 @@ const router = {
    * @path: The route to run.
    */
   go (path) {
-    const current = parsePath(window.location.hash, {}).path
-    const target = parsePath(path, {}).path
-    if (current === target) {
-      router.run(target)
+    const curr = parsePath(window.location.hash)
+    const next = parsePath(path)
+    if (curr.path === next.path) {
+      this.run(next)
     } else {
-      window.location.hash = target
+      window.location.hash = path
     }
   },
 
@@ -108,19 +110,30 @@ const router = {
    */
   get (param) {
     param = '' + param
-    if (!param) return
+
+    if (!param) {
+      return
+    }
 
     // Find matching route
     const hash = window.location.hash
-    let prev = parsePath(hash, {})
-    let next = router.route(hash)
-    if (!next) return
+
+    let next = this.route(hash)
+
+    if (!next) {
+      return
+    }
+
+    let prev = parsePath(hash)
+
     prev = prev.path.split('/')
     next = next.path.split('/')
 
     // Find value of named param
     for (let i = 0; i < next.length; i++) {
-      if (next[i] === param) return prev[i]
+      if (next[i] === param) {
+        return prev[i]
+      }
     }
   },
 
@@ -141,12 +154,14 @@ const router = {
 
     // Find matching route
     const hash = window.location.hash
-    let prev = parsePath(hash, {})
-    let next = router.route(hash)
+
+    let next = this.route(hash)
 
     if (!next) {
       return
     }
+
+    let prev = parsePath(hash)
 
     prev = prev.path.split('/')
     next = next.path.split('/')
@@ -181,7 +196,7 @@ const router = {
     if (!window.location.hash) {
       window.location.hash = origin
     } else {
-      router.run(window.location.hash)
+      this.run(parsePath(window.location.hash))
     }
   },
 
@@ -193,22 +208,15 @@ const router = {
    * @path: The path which should trigger a route.
    * @params: Optional parameters to pass to the handler.
    */
-  run (path, params) {
-    path = path || window.location.hash
-    params = params || {}
-
-    // Parse previous and next hash
-    const prev = parsePath(params.prev, {})
-    const next = parsePath(path, { prev: prev.path })
-
+  run (next = {}, prev = {}) {
     if (prev.path && next.path && prev.path === next.path) {
       return
     }
 
     // Find matching route
-    const route = router.route(next.path)
+    const route = this.route(next.path)
     if (!route) {
-      return router.fallback()
+      return this.fallback()
     }
 
     // Resolve parameters
@@ -221,9 +229,9 @@ const router = {
     }
 
     // Run callbacks
-    runCallback(router.before, function () {
+    runCallback(this.before, () => {
       route.handler(next)
-      runCallback(router.after)
+      runCallback(this.after)
     })
   },
 
@@ -237,7 +245,7 @@ const router = {
       return route
     }
 
-    const parsed = parsePath(x, {}).path
+    const parsed = parsePath(x).path
 
     for (const p in routes) {
       if (routes.hasOwnProperty(p) && routes[p] && routes[p].matcher.test(parsed)) {
@@ -255,13 +263,24 @@ let skipNextChange = false
 /*
  * @internal Parse an input path.
  */
-const parsePath = function (input, params) {
-  params.path = (input || '')
-    .replace(queryMatch, '')
-    .replace(prefixMatch, '')
-    .replace(endMatch, '')
-    .replace(spaceMatch, '')
-  params.path = decodeURIComponent(params.path)
+const parsePath = function (input) {
+  const params = {
+    path: '',
+    query: ''
+  }
+
+  if (input) {
+    input = decodeURIComponent(input)
+
+    const query = input.match(queryMatch)
+    params.query = query ? query[1] : ''
+
+    params.path = input.replace(queryMatch, '')
+      .replace(prefixMatch, '')
+      .replace(endMatch, '')
+      .replace(spaceMatch, '')
+  }
+
   return params
 }
 
@@ -283,11 +302,11 @@ const runCallback = function (callbacks, after) {
  * Listen on the hash change event to trigger routes,
  * with setInterval fallback for older browsers.
  */
-const change = function (event) {
+const change = function ({ newURL, oldURL }) {
   if (skipNextChange) {
     skipNextChange = false
   } else {
-    router.run(event.newURL, { prev: event.oldURL })
+    router.run(parsePath(newURL), parsePath(oldURL))
   }
 }
 
