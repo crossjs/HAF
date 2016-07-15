@@ -10,20 +10,24 @@
 
 ## APIs
 
+- Core
+  - .addPage(name, path, module)
+- Page
+  - .template
+  - .components
 - Layout
-  - get(row, col)
-- Plugin
-  - add(route, layout, handler)
+  - .init(template)
+  - .get([selector])
 - Router
-  - on(name, path, handler)
-  - off(any)
-  - start(origin)
-  - go(path)
-  - reset()
+  - .on(name, path, handler)
+  - .off(any)
+  - .start(origin)
+  - .go(path)
+  - .reset()
 - Events
-  - on(name, handler)
-  - off(name, handler)
-  - trigger(name, ...args)
+  - .on(name, handler)
+  - .off(name, handler)
+  - .trigger(name, ...args)
 
 ## Usage
 
