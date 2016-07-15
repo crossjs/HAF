@@ -10,21 +10,20 @@
 
 ## APIs
 
-- Core
-  - Layout
-    - get(row, col)
-  - Plugin
-    - add(route, layout, handler)
-  - Router
-    - on(name, path, handler)
-    - off(any)
-    - start(origin)
-    - go(path)
-    - reset()
-  - Events
-    - on(name, handler)
-    - off(name, handler)
-    - trigger(name, ...args)
+- Layout
+  - get(row, col)
+- Plugin
+  - add(route, layout, handler)
+- Router
+  - on(name, path, handler)
+  - off(any)
+  - start(origin)
+  - go(path)
+  - reset()
+- Events
+  - on(name, handler)
+  - off(name, handler)
+  - trigger(name, ...args)
 
 ## Usage
 
